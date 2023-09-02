@@ -1,0 +1,144 @@
+/* Reset some default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Set up some basic styles for the body */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Style the container */
+.container {
+    max-width: 800px;
+    background:linear-gradient(135deg, rgb(140 140 233) ,rgb(130 204 117) );
+    border-radius: 10px;
+    border:2px solid #424460;
+    box-shadow: 0 0 20px rgb(156 148 148 / 10%);
+    padding: 30px;
+    text-align: center;
+}
+
+/* Style the card */
+.card {
+    margin-bottom: 20px;
+}
+
+/* Style headings */
+h1 {
+    font-size: 28px;
+    color: #140d67;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 13px;
+    color: #070707;
+    margin-bottom: 20px;
+    color:black;
+    font-weight:bold;
+}
+
+/* Style the image */
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px rgb(0 0 0 / 20%);
+}
+
+/* Style the label and input */
+label {
+    display: block;
+    font-size: 16px;
+    color: #333;
+    margin-top: 10px;
+}
+
+#input-file {
+    display: none;
+}
+
+/* Style the button */
+button {
+    padding: 10px 14px;
+    background-color: #104e90;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+   
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Style the loading indicator */
+#loading-indicator {
+    display: none;
+    font-size: 18px;
+    color: #ffffff;
+    font-weight:bold;
+    margin-top: 20px;
+}
+
+/* Style the textarea */
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 20px;
+    border: 1px solid #fffefe;
+    border-radius: 10px;
+    font-size: 16px;
+    resize: vertical;
+    background:black;
+    color:white;
+}
+/* Style the label for "Upload image" */
+#uploadImg {
+    display: inline-block;
+    padding: 10px 12px;
+    background-color: #225e2c;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 16px;
+}
+
+#uploadImg:hover {
+    background-color: #074004;
+}
+
+
+
+/* CSS styles for the ".flexrow" class */
+.flexrow {
+    justify-content:center;
+    display: flex;
+    flex-direction: row;
+    gap:10px;
+}
+
+/* Media query for responsiveness */
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+}
