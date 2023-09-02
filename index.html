@@ -6,22 +6,15 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="upload.css">
     <title>Extract Text</title>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 </head>
-
-<!-- for extract mathematical equations -->
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
-
-
-
 <body>
     <div class="container">
         <div class="card">
             <div class="flexColumn">
                 <h1>Extract text</h1>
-                <p>You can extract complex text (such as mathematical equations, etc.) by capturing or uploading images, copy it, and input it into the main input field to get an instant solution.</p>
-                <div id="image-cropper">
-                    <img src="capture.jpg" id="profile-pic" height="200px" width="200px">
-                </div>
+                <p>You can extract complex text (such as mathematical equations, etc.) by uploading images, copy it, and input it into the main input field to get an instant solution.</p>
+                <img src="capture.jpg" id="profile-pic" height="200px" width="200px">
             </div>
             <div class="flexrow">
                 <button id="extract-button">Extract Text</button>
@@ -35,80 +28,68 @@
             </div>
         </div>
     </div>
-    
     <script src="https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js"></script>
     <script>
-     window.onload = function () {
-    let profilePic = document.getElementById("profile-pic");
-    let inputFile = document.getElementById("input-file");
-    let extractButton = document.getElementById("extract-button");
-    let textOutput = document.getElementById("text-output");
-    let loadingIndicator = document.getElementById("loading-indicator");
-    let copyButton = document.getElementById("copy-button");
-    let copiedMessage = document.getElementById("copied-message");
+        window.onload = function () {
+            let profilePic = document.getElementById("profile-pic");
+            let inputFile = document.getElementById("input-file");
+            let extractButton = document.getElementById("extract-button");
+            let textOutput = document.getElementById("text-output");
+            let loadingIndicator = document.getElementById("loading-indicator");
+            let copyButton = document.getElementById("copy-button");
 
-    inputFile.onchange = function () {
-        profilePic.src = URL.createObjectURL(inputFile.files[0]);
-        // Initialize Cropper.js when a new image is selected
-        if (profilePic.src) {
-            initCropper(profilePic);
-        }
-    };
+            inputFile.onchange = function () {
+                profilePic.src = URL.createObjectURL(inputFile.files[0]);
+            };
 
-  
+            extractButton.onclick = function () {
+                loadingIndicator.style.display = "block";
 
-    extractButton.onclick = function () {
-        loadingIndicator.style.display = "block";
+                Tesseract.recognize(
+                    profilePic.src,
+                    "eng",
+                    {
+                        logger: (m) => console.log(m),
+                        lineSeparator: "\n",
+                        preserve_interword_spaces: 1,
+                    }
+                )
+                .then((result) => {
+                    console.log(result.text);
 
-        Tesseract.recognize(
-            profilePic.src,
-            "eng",
-            {
-                logger: (m) => console.log(m),
-                lineSeparator: "\n",
-                preserve_interword_spaces: 1,
-            }
-        )
-        .then((result) => {
-            console.log(result.text);
+                    // Extracted text containing mathematical equations
+                    let extractedText = result.text;
 
-            // Extracted text containing mathematical equations
-            let extractedText = result.text;
-            
-            // Display the extracted text in the textarea
-            textOutput.value = extractedText;
+                    // Display the extracted text in the textarea
+                    textOutput.value = extractedText;
 
-            // Render mathematical equations using MathJax
-            MathJax.typesetPromise().then(() => {
-                MathJax.typesetClear([textOutput]);
-                MathJax.typesetPromise([textOutput]);
-            });
-        })
-        .catch((error) => {
-            console.error("An error occurred during text extraction:", error);
-        })
-        .finally(() => {
-            loadingIndicator.style.display = "none";
-        });
-    };
+                    // Render mathematical equations using MathJax
+                    MathJax.typesetPromise().then(() => {
+                        MathJax.typesetClear([textOutput]);
+                        MathJax.typesetPromise([textOutput]);
+                    });
+                })
+                .catch((error) => {
+                    console.error("An error occurred during text extraction:", error);
+                })
+                .finally(() => {
+                    loadingIndicator.style.display = "none";
+                });
+            };
 
-    copyButton.onclick = function () {
-        textOutput.select();
-        document.execCommand("copy");
+            copyButton.onclick = function () {
+                textOutput.select();
+                document.execCommand("copy");
 
-        // Change the button text to "Copied"
-        copyButton.innerText = "Copied";
+                // Change the button text to "Copied"
+                copyButton.innerText = "Copied";
 
-        // Show the "Copied" message
-
-        // Hide the "Copied" message and revert the button text after 2 seconds
-        setTimeout(function () {
-            copyButton.innerText = "Copy";
-        }, 2000);
-    };
-};
-
-
+                // Hide the "Copied" message and revert the button text after 2 seconds
+                setTimeout(function () {
+                    copyButton.innerText = "Copy";
+                }, 2000);
+            };
+        };
     </script>
 </body>
 </html>
