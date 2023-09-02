@@ -7,9 +7,7 @@
     <link rel="stylesheet" href="upload.css">
     <title>Extract Text</title>
 </head>
-<!-- for cropping -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js"></script> 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.css">
+
 <!-- for extract mathematical equations -->
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 
@@ -57,16 +55,7 @@
         }
     };
 
-    function initCropper(imageElement) {
-        let imageCropper = new Cropper(imageElement, {
-            aspectRatio: 16 / 9, // You can adjust the aspect ratio as needed
-            viewMode: 1, // Set the view mode (1: Crop Box, 2: Preview, 3: Full)
-            autoCropArea: 1, // Automatically crop the entire image
-            crop: function (event) {
-                // Handle cropping events if needed
-            },
-        });
-    }
+  
 
     extractButton.onclick = function () {
         loadingIndicator.style.display = "block";
