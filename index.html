@@ -17,9 +17,10 @@
                 <img src="capture.jpg" id="profile-pic" height="200px" width="200px">
             </div>
             <div class="flexrow">
-                <!-- Use the 'capture' attribute for camera access -->
+                <!-- Use the 'capture' attribute for camera access on mobile -->
                 <label for="input-file" id="uploadImg">Upload image</label>
-                <input type="file" accept="image/*" id="input-file" capture="camera">
+                <input type="file" accept="image/*" id="input-file" style="display: none;">
+                <button id="select-image-button">Select Image</button>
                 <button id="extract-button">Extract Text</button>
             </div>
             <button id="restart-button">Restart</button>
@@ -35,12 +36,13 @@
         window.onload = function () {
             let profilePic = document.getElementById("profile-pic");
             let inputFile = document.getElementById("input-file");
+            let selectImageButton = document.getElementById("select-image-button");
             let extractButton = document.getElementById("extract-button");
             let textOutput = document.getElementById("text-output");
             let loadingIndicator = document.getElementById("loading-indicator");
             let copyButton = document.getElementById("copy-button");
             let restartButton = document.getElementById("restart-button");
-            
+
             // Function to reset the text output
             function resetTextOutput() {
                 textOutput.value = "";
@@ -58,7 +60,12 @@
                 }
             }
 
-            inputFile.onchange = handleImageSelection;
+            selectImageButton.onclick = function () {
+                // Trigger the file input dialog
+                inputFile.click();
+            };
+
+            inputFile.addEventListener("change", handleImageSelection);
 
             extractButton.onclick = function () {
                 resetTextOutput();
