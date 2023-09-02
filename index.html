@@ -14,17 +14,15 @@
             <div class="flexColumn">
                 <h1>Extract text</h1>
                 <p>You can extract complex text (such as mathematical equations, etc.) by uploading images, copy it, and input it into the main input field to get an instant solution.</p>
-                <img src="capture.jpg" id="profile-pic" height="200px" width="auto">
+                <img src="capture.jpg" id="profile-pic" height="200px" width="200px">
             </div>
             <div class="flexrow">
-                
-                <!-- Use the 'capture' attribute to request camera permission -->
+                <!-- Use the 'capture' attribute for camera access -->
                 <label for="input-file" id="uploadImg">Upload image</label>
                 <input type="file" accept="image/*" id="input-file" capture="camera">
                 <button id="extract-button">Extract Text</button>
-               
             </div>
-            <button id="restart-button">Restart</button> <!-- Added restart button -->
+            <button id="restart-button">Restart</button>
             <div id="loading-indicator" style="display: none;">Extracting text...</div>
             <div class="textarea-container">
                 <textarea id="text-output" rows="10" cols="40" placeholder="Extracted text here"></textarea>
@@ -41,10 +39,8 @@
             let textOutput = document.getElementById("text-output");
             let loadingIndicator = document.getElementById("loading-indicator");
             let copyButton = document.getElementById("copy-button");
-            let restartButton = document.getElementById("restart-button"); // Added restart button
-
-
-             
+            let restartButton = document.getElementById("restart-button");
+            
             // Function to reset the text output
             function resetTextOutput() {
                 textOutput.value = "";
@@ -54,16 +50,30 @@
                 });
             }
 
-            inputFile.onchange = function () {
-                profilePic.src = URL.createObjectURL(inputFile.files[0]);
-            };
+            // Function to handle image selection from file input
+            function handleImageSelection() {
+                const file = inputFile.files[0];
+                if (file) {
+                    profilePic.src = URL.createObjectURL(file);
+                }
+            }
+
+            inputFile.onchange = handleImageSelection;
 
             extractButton.onclick = function () {
-                resetTextOutput(); // Reset text output before extraction
+                resetTextOutput();
                 loadingIndicator.style.display = "block";
 
+                const file = inputFile.files[0];
+
+                if (!file) {
+                    alert("Please select an image to extract text from.");
+                    loadingIndicator.style.display = "none";
+                    return;
+                }
+
                 Tesseract.recognize(
-                    profilePic.src,
+                    file,
                     "eng",
                     {
                         logger: (m) => console.log(m),
@@ -72,15 +82,8 @@
                     }
                 )
                 .then((result) => {
-                    console.log(result.text);
-
-                    // Extracted text containing mathematical equations
                     let extractedText = result.text;
-
-                    // Display the extracted text in the textarea
                     textOutput.value = extractedText;
-
-                    // Render mathematical equations using MathJax
                     MathJax.typesetPromise().then(() => {
                         MathJax.typesetClear([textOutput]);
                         MathJax.typesetPromise([textOutput]);
@@ -97,25 +100,18 @@
             copyButton.onclick = function () {
                 textOutput.select();
                 document.execCommand("copy");
-
-                // Change the button text to "Copied"
                 copyButton.innerText = "Copied";
-
-                // Hide the "Copied" message and revert the button text after 2 seconds
                 setTimeout(function () {
                     copyButton.innerText = "Copy";
                 }, 2000);
             };
 
             restartButton.onclick = function () {
-                resetTextOutput(); // Reset text output on restart
-                inputFile.value = ""; // Clear the file input
-                profilePic.src = "capture.jpg"; // Clear the image
+                resetTextOutput();
+                inputFile.value = "";
+                profilePic.src = "capture.jpg";
             };
         };
-
-
-        
     </script>
 </body>
 </html>
