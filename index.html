@@ -17,10 +17,13 @@
                 <img src="capture.jpg" id="profile-pic" height="200px" width="200px">
             </div>
             <div class="flexrow">
-                <button id="extract-button">Extract Text</button>
+                
                 <label for="input-file" id="uploadImg">Upload image</label>
-                <input type="file" accept="image/jpeg, image/png, image/jpg" id="input-file">
+                <input type="file" accept="image/*" id="input-file">
+                <button id="extract-button">Extract Text</button>
+               
             </div>
+            <button id="restart-button">Restart</button> <!-- Added restart button -->
             <div id="loading-indicator" style="display: none;">Extracting text...</div>
             <div class="textarea-container">
                 <textarea id="text-output" rows="10" cols="40" placeholder="Extracted text here"></textarea>
@@ -37,12 +40,25 @@
             let textOutput = document.getElementById("text-output");
             let loadingIndicator = document.getElementById("loading-indicator");
             let copyButton = document.getElementById("copy-button");
+            let restartButton = document.getElementById("restart-button"); // Added restart button
+
+
+             
+            // Function to reset the text output
+            function resetTextOutput() {
+                textOutput.value = "";
+                MathJax.typesetPromise().then(() => {
+                    MathJax.typesetClear([textOutput]);
+                    MathJax.typesetPromise([textOutput]);
+                });
+            }
 
             inputFile.onchange = function () {
                 profilePic.src = URL.createObjectURL(inputFile.files[0]);
             };
 
             extractButton.onclick = function () {
+                resetTextOutput(); // Reset text output before extraction
                 loadingIndicator.style.display = "block";
 
                 Tesseract.recognize(
@@ -89,7 +105,16 @@
                     copyButton.innerText = "Copy";
                 }, 2000);
             };
+
+            restartButton.onclick = function () {
+                resetTextOutput(); // Reset text output on restart
+                inputFile.value = ""; // Clear the file input
+                profilePic.src = "capture.jpg"; // Clear the image
+            };
         };
+
+
+        
     </script>
 </body>
 </html>
