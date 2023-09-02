@@ -89,7 +89,7 @@ button:hover {
 #loading-indicator {
     display: none;
     font-size: 18px;
-    color: #ffffff;
+    color: #131111;
     font-weight:bold;
     margin-top: 20px;
 }
@@ -139,6 +139,6 @@ textarea {
     }
 
     h1 {
-        font-size: 24px;
+        font-size: 30px;
     }
 }
