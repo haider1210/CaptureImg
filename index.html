@@ -16,46 +16,54 @@
 <body>
     <h1>Camera App</h1>
     <div id="cameraContainer">
-        <video id="cameraPreview" autoplay></video>
-        <button id="captureButton">Capture Image</button>
+        <button id="requestPermissionButton">Request Camera Permission</button>
+        <video id="cameraPreview" style="display: none;" autoplay></video>
+        <button id="captureButton" style="display: none;">Capture Image</button>
     </div>
     <img id="capturedImage" style="display: none; max-width: 100%;">
 
     <script>
+        const requestPermissionButton = document.getElementById('requestPermissionButton');
         const captureButton = document.getElementById('captureButton');
         const cameraPreview = document.getElementById('cameraPreview');
         const capturedImage = document.getElementById('capturedImage');
 
         // Check for getUserMedia support
         if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
-            // Access the device's camera
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then((stream) => {
-                    cameraPreview.srcObject = stream;
+            // Handle camera permission request
+            requestPermissionButton.addEventListener('click', () => {
+                // Request permission to access the camera
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then((stream) => {
+                        // Permission granted; hide the request button and show the camera preview and capture button
+                        requestPermissionButton.style.display = 'none';
+                        cameraPreview.style.display = 'block';
+                        captureButton.style.display = 'block';
 
-                    // Display the camera preview
-                    cameraPreview.style.display = 'block';
+                        // Display the camera preview
+                        cameraPreview.srcObject = stream;
 
-                    // Handle image capture
-                    captureButton.addEventListener('click', () => {
-                        const canvas = document.createElement('canvas');
-                        const context = canvas.getContext('2d');
-                        canvas.width = cameraPreview.videoWidth;
-                        canvas.height = cameraPreview.videoHeight;
-                        context.drawImage(cameraPreview, 0, 0, canvas.width, canvas.height);
+                        // Handle image capture
+                        captureButton.addEventListener('click', () => {
+                            const canvas = document.createElement('canvas');
+                            const context = canvas.getContext('2d');
+                            canvas.width = cameraPreview.videoWidth;
+                            canvas.height = cameraPreview.videoHeight;
+                            context.drawImage(cameraPreview, 0, 0, canvas.width, canvas.height);
 
-                        // Convert the captured frame to a data URL and display it
-                        const imageUrl = canvas.toDataURL('image/png');
-                        capturedImage.src = imageUrl;
-                        capturedImage.style.display = 'block';
+                            // Convert the captured frame to a data URL and display it
+                            const imageUrl = canvas.toDataURL('image/png');
+                            capturedImage.src = imageUrl;
+                            capturedImage.style.display = 'block';
 
-                        // Stop the camera stream
-                        stream.getTracks().forEach(track => track.stop());
+                            // Stop the camera stream
+                            stream.getTracks().forEach(track => track.stop());
+                        });
+                    })
+                    .catch((error) => {
+                        console.error('Error accessing camera:', error);
                     });
-                })
-                .catch((error) => {
-                    console.error('Error accessing camera:', error);
-                });
+            });
         } else {
             console.error('getUserMedia is not supported in this browser');
         }
