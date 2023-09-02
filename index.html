@@ -7,13 +7,18 @@
     <link rel="stylesheet" href="upload.css">
     <title>Extract Text</title>
 </head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.css">
+
 <body>
     <div class="container">
         <div class="card">
             <div class="flexColumn">
                 <h1>Extract text</h1>
                 <p>You can extract complex text (such as mathematical equations, etc.) by capturing or uploading images, copy it, and input it into the main input field to get an instant solution.</p>
-                <img src="capture.jpg"  id="profile-pic" height="200px" width="200px">
+                <div id="image-cropper">
+                    <img src="capture.jpg" id="profile-pic" height="200px" width="200px">
+                </div>
             </div>
             <div class="flexrow">
                 <button id="extract-button">Extract Text</button>
@@ -24,66 +29,80 @@
             <div class="textarea-container">
                 <textarea id="text-output" rows="10" cols="40" placeholder="Extracted text here"></textarea>
                 <button id="copy-button">Copy</button>
-               
             </div>
         </div>
     </div>
+    
     <script src="https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js"></script>
     <script>
-        window.onload = function () {
-            let profilePic = document.getElementById("profile-pic");
-            let inputFile = document.getElementById("input-file");
-            let extractButton = document.getElementById("extract-button");
-            let textOutput = document.getElementById("text-output");
-            let loadingIndicator = document.getElementById("loading-indicator");
-            let copyButton = document.getElementById("copy-button");
-            let copiedMessage = document.getElementById("copied-message");
+       window.onload = function () {
+    let profilePic = document.getElementById("profile-pic");
+    let inputFile = document.getElementById("input-file");
+    let extractButton = document.getElementById("extract-button");
+    let textOutput = document.getElementById("text-output");
+    let loadingIndicator = document.getElementById("loading-indicator");
+    let copyButton = document.getElementById("copy-button");
+    let copiedMessage = document.getElementById("copied-message");
 
-            inputFile.onchange = function () {
-                profilePic.src = URL.createObjectURL(inputFile.files[0]);
-            };
+    inputFile.onchange = function () {
+        profilePic.src = URL.createObjectURL(inputFile.files[0]);
+        // Initialize Cropper.js when a new image is selected
+        if (profilePic.src) {
+            initCropper(profilePic);
+        }
+    };
 
-            extractButton.onclick = function () {
-                loadingIndicator.style.display = "block";
+    function initCropper(imageElement) {
+        let imageCropper = new Cropper(imageElement, {
+            aspectRatio: 16 / 9, // You can adjust the aspect ratio as needed
+            viewMode: 1, // Set the view mode (1: Crop Box, 2: Preview, 3: Full)
+            autoCropArea: 1, // Automatically crop the entire image
+            crop: function (event) {
+                // Handle cropping events if needed
+            },
+        });
+    }
 
-                Tesseract.recognize(
-                    profilePic.src,
-                    "eng",
-                    {
-                        logger: (m) => console.log(m),
-                        lineSeparator: "\n",
-                        preserve_interword_spaces: 1,
-                    }
-                )
-                .then((result) => {
-                    console.log(result.text);
-                    textOutput.value = result.text;
-                })
-                .catch((error) => {
-                    console.error("An error occurred during text extraction:", error);
-                })
-                .finally(() => {
-                    loadingIndicator.style.display = "none";
-                });
-            };
+    extractButton.onclick = function () {
+        loadingIndicator.style.display = "block";
 
-            copyButton.onclick = function () {
-                textOutput.select();
-                document.execCommand("copy");
+        Tesseract.recognize(
+            profilePic.src,
+            "eng",
+            {
+                logger: (m) => console.log(m),
+                lineSeparator: "\n",
+                preserve_interword_spaces: 1,
+            }
+        )
+        .then((result) => {
+            console.log(result.text);
+            textOutput.value = result.text;
+        })
+        .catch((error) => {
+            console.error("An error occurred during text extraction:", error);
+        })
+        .finally(() => {
+            loadingIndicator.style.display = "none";
+        });
+    };
 
-                // Change the button text to "Copied"
-                copyButton.innerText = "Copied";
+    copyButton.onclick = function () {
+        textOutput.select();
+        document.execCommand("copy");
 
-                // Show the "Copied" message
-              
+        // Change the button text to "Copied"
+        copyButton.innerText = "Copied";
 
-                // Hide the "Copied" message and revert the button text after 2 seconds
-                setTimeout(function () {
-                    
-                    copyButton.innerText = "Copy";
-                }, 2000);
-            };
-        };
+        // Show the "Copied" message
+
+        // Hide the "Copied" message and revert the button text after 2 seconds
+        setTimeout(function () {
+            copyButton.innerText = "Copy";
+        }, 2000);
+    };
+};
+
     </script>
 </body>
 </html>
