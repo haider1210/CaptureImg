@@ -7,8 +7,13 @@
     <link rel="stylesheet" href="upload.css">
     <title>Extract Text</title>
 </head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js"></script>
+<!-- for cropping -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js"></script> 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.css">
+<!-- for extract mathematical equations -->
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+
 
 <body>
     <div class="container">
@@ -35,7 +40,7 @@
     
     <script src="https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js"></script>
     <script>
-       window.onload = function () {
+     window.onload = function () {
     let profilePic = document.getElementById("profile-pic");
     let inputFile = document.getElementById("input-file");
     let extractButton = document.getElementById("extract-button");
@@ -77,7 +82,18 @@
         )
         .then((result) => {
             console.log(result.text);
-            textOutput.value = result.text;
+
+            // Extracted text containing mathematical equations
+            let extractedText = result.text;
+            
+            // Display the extracted text in the textarea
+            textOutput.value = extractedText;
+
+            // Render mathematical equations using MathJax
+            MathJax.typesetPromise().then(() => {
+                MathJax.typesetClear([textOutput]);
+                MathJax.typesetPromise([textOutput]);
+            });
         })
         .catch((error) => {
             console.error("An error occurred during text extraction:", error);
@@ -102,6 +118,7 @@
         }, 2000);
     };
 };
+
 
     </script>
 </body>
