@@ -1,324 +1,159 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Capture Image and Extract Text</title>
-    
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f2f2f2;
-        }
-
-        header {
-            text-align: center;
-            background-color: #7254fc;
-            color: #fff;
-            padding: 10px 0;
-        }
-
-        h1 {
-            margin: 0;
-            padding: 0;
-        }
-
-        main {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        form {
-            text-align: center;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        input[type="file"] {
-            display: none;
-        }
-
-        input[type="submit"] {
-            background-color: #7254fc;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #555;
-        }
-
-        p > img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 20px auto;
-        }
-
-        /* Additional styles for text extraction */
-        #text-output {
-            width: 100%;
-            resize: vertical;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <h1>Capture Image and Extract Text</h1>
-    </header>
-    <main>
-        <form action="#" id="myform" enctype="multipart/form-data">
-            <label for="input-file">Upload image</label>
-            <input type="file" accept="image/*" id="input-file">
-            <button id="extract-button">Extract Text</button>
-            <textarea id="text-output" rows="10" cols="40"></textarea>
-
-            <label for="capture">Capture</label>
-            <input type="file" id="capture" accept="image/*" capture multiple />
-            <br />
-            <input type="submit" value="Process" />
-        </form>
-        <p><img src="capture.jpg" id="img" alt="from phone" /></p>
-    </main>
-    <script>
-        document.addEventListener('DOMContentLoaded', (ev) => {
-            let form = document.getElementById('myform');
-            let input = document.getElementById('capture');
-
-            input.addEventListener('change', (ev) => {
-                console.dir(input.files[0]);
-                input.files[0].type.indexOf("image/");
-                let img = document.getElementById('img');
-                img.src = window.URL.createObjectURL(input.files[0]);
-            })
-        })
-
-        window.onload = function () {
-            let profilePic = document.getElementById("img");
-            let inputFile = document.getElementById("input-file");
-            let extractButton = document.getElementById("extract-button");
-            let textOutput = document.getElementById("text-output");
-
-            inputFile.onchange = function () {
-                profilePic.src = URL.createObjectURL(inputFile.files[0]);
-            }
-
-            extractButton.onclick = function () {
-                Tesseract.recognize(
-                    profilePic.src,
-                    'eng', // Language code for English (adjust as needed)
-                    {
-                        logger: m => console.log(m),
-                        lineSeparator: '\n', // Set the line separator
-                        preserve_interword_spaces: 1, // Preserve spaces between words
-                    }
-                ).then(result => {
-                    console.log(result.text);
-                    textOutput.value = result.text; // Set the textarea value
-                }).catch(error => {
-                    console.error('An error occurred during text extraction:', error);
-                });
-            };
-        }
-    </script>
-
-    <script src="https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js"></script>
-</body>
-</html> -->
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Capture Image and Extract Text</title>
-    
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f2f2f2;
-        }
-
-        header {
-            text-align: center;
-            background-color: #7254fc;
-            color: #fff;
-            padding: 10px 0;
-        }
-
-        h1 {
-            margin: 0;
-            padding: 0;
-        }
-
-        main {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        form {
-            text-align: center;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        input[type="file"] {
-            display: none;
-        }
-
-        input[type="submit"] {
-            background-color: #7254fc;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #555;
-        }
-
-        p > img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 20px auto;
-        }
-
-        /* Additional styles for text extraction */
-        #text-output {
-            width: 100%;
-            resize: vertical;
-        }
-    </style>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="upload.css">
+    <title>Extract Text</title>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 </head>
 <body>
-    <header>
-        <h1>Capture Image and Extract Text</h1>
-    </header>
-    <main>
-        <form action="#" id="myform" enctype="multipart/form-data">
-            <label for="input-file">Upload image</label>
-            <input type="file" accept="image/*" id="input-file">
-            <button id="extract-button">Extract Text</button>
-            <textarea id="text-output" rows="10" cols="40"></textarea>
-
-            <label for="capture">Capture</label>
-            <input type="file" id="capture" accept="image/*" capture multiple />
-            <br />
-            <input type="submit" value="Process" />
-        </form>
-        <p><img src="capture.jpg" id="img" alt="from phone" /></p>
-    </main>
+    <div class="container">
+        <div class="card">
+            <div class="flexColumn">
+                <h1>Extract text</h1>
+                <p>You can extract complex text (such as mathematical equations, etc.) by capturing images from your camera, copy it, and input it into the main input field to get an instant solution.</p>
+                <canvas id="capture-canvas" style="display: none;"></canvas> <!-- Add canvas for image capture -->
+                <img src="capture.jpg" id="profile-pic" height="200px" width="200px">
+            </div>
+            <div class="flexrow">
+                <label for="input-file" id="uploadImg">Upload image</label>
+                <input type="file" accept="image/*" id="input-file" style="display: none;">
+                <button id="select-image-button">Select Image</button>
+                <button id="capture-button">Capture Image</button> <!-- Change button label -->
+                <button id="extract-button">Extract Text</button>
+            </div>
+            <button id="restart-button">Restart</button>
+            <div id="loading-indicator" style="display: none;">Extracting text...</div>
+            <div class="textarea-container">
+                <textarea id="text-output" rows="10" cols="40" placeholder="Extracted text here"></textarea>
+                <button id="copy-button">Copy</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', (ev) => {
-            let form = document.getElementById('myform');
-            let input = document.getElementById('capture');
-            let img = document.getElementById('img');
-
-            input.addEventListener('change', (ev) => {
-                if (input.files && input.files[0]) {
-                    // Set the image source to the captured image
-                    img.src = window.URL.createObjectURL(input.files[0]);
-                }
-            });
-        });
-
         window.onload = function () {
+            let profilePic = document.getElementById("profile-pic");
             let inputFile = document.getElementById("input-file");
-            let extractButton = document.getElementById("extract-button");
+            let selectImageButton = document.getElementById("select-image-button");
+            let captureButton = document.getElementById("capture-button"); // Add capture button
             let textOutput = document.getElementById("text-output");
+            let loadingIndicator = document.getElementById("loading-indicator");
+            let copyButton = document.getElementById("copy-button");
+            let restartButton = document.getElementById("restart-button");
+            let captureCanvas = document.getElementById("capture-canvas");
 
-            inputFile.onchange = function () {
-                profilePic.src = URL.createObjectURL(inputFile.files[0]);
+            // Function to reset the text output
+            function resetTextOutput() {
+                textOutput.value = "";
+                MathJax.typesetPromise().then(() => {
+                    MathJax.typesetClear([textOutput]);
+                    MathJax.typesetPromise([textOutput]);
+                });
             }
+
+            // Function to handle image selection from file input
+            function handleImageSelection() {
+                const file = inputFile.files[0];
+                if (file) {
+                    profilePic.src = URL.createObjectURL(file);
+                }
+            }
+
+            // Function to capture an image from the camera
+            function captureImage() {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function (stream) {
+                        captureCanvas.style.display = "block";
+                        const ctx = captureCanvas.getContext("2d");
+                        const video = document.createElement("video");
+                        video.srcObject = stream;
+
+                        video.onloadedmetadata = function () {
+                            captureCanvas.width = video.videoWidth;
+                            captureCanvas.height = video.videoHeight;
+                            ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+                            stream.getTracks().forEach(track => track.stop());
+                            video.remove();
+                            captureCanvas.toBlob(function (blob) {
+                                profilePic.src = URL.createObjectURL(blob);
+                            }, "image/jpeg");
+                            captureCanvas.style.display = "none";
+                        };
+
+                        video.play();
+                    })
+                    .catch(function (error) {
+                        console.error('Error accessing the camera:', error);
+                    });
+            }
+
+            selectImageButton.onclick = function () {
+                // Trigger the file input dialog
+                inputFile.click();
+            };
+
+            inputFile.addEventListener("change", handleImageSelection);
+
+            captureButton.onclick = function () {
+                resetTextOutput();
+                captureImage(); // Capture image from the camera
+            };
 
             extractButton.onclick = function () {
+                resetTextOutput();
+                loadingIndicator.style.display = "block";
+
+                const file = inputFile.files[0];
+
+                if (!file) {
+                    alert("Please select an image to extract text from.");
+                    loadingIndicator.style.display = "none";
+                    return;
+                }
+
                 Tesseract.recognize(
                     profilePic.src,
-                    'eng', // Language code for English (adjust as needed)
+                    "eng",
                     {
-                        logger: m => console.log(m),
-                        lineSeparator: '\n', // Set the line separator
-                        preserve_interword_spaces: 1, // Preserve spaces between words
+                        logger: (m) => console.log(m),
+                        lineSeparator: "\n",
+                        preserve_interword_spaces: 1,
                     }
-                ).then(result => {
-                    console.log(result.text);
-                    textOutput.value = result.text; // Set the textarea value
-                }).catch(error => {
-                    console.error('An error occurred during text extraction:', error);
+                )
+                .then((result) => {
+                    let extractedText = result.text;
+                    textOutput.value = extractedText;
+                    MathJax.typesetPromise().then(() => {
+                        MathJax.typesetClear([textOutput]);
+                        MathJax.typesetPromise([textOutput]);
+                    });
+                })
+                .catch((error) => {
+                    console.error("An error occurred during text extraction:", error);
+                })
+                .finally(() => {
+                    loadingIndicator.style.display = "none";
                 });
             };
-        }
-    </script>
 
-    <script src="https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js"></script>
+            copyButton.onclick = function () {
+                textOutput.select();
+                document.execCommand("copy");
+                copyButton.innerText = "Copied";
+                setTimeout(function () {
+                    copyButton.innerText = "Copy";
+                }, 2000);
+            };
 
-    <script>
-        // Function to request camera access for capturing an image
-        async function requestCameraAccess() {
-            try {
-                // Request access to the camera
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-
-                // Handle the camera stream (you can display it if needed)
-                const videoElement = document.createElement('video');
-                document.body.appendChild(videoElement);
-                videoElement.srcObject = stream;
-                videoElement.play();
-
-                // Capture an image from the camera stream
-                const canvas = document.createElement('canvas');
-                canvas.width = videoElement.videoWidth;
-                canvas.height = videoElement.videoHeight;
-                const context = canvas.getContext('2d');
-                context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-
-                // Convert the captured image to a Blob
-                canvas.toBlob((blob) => {
-                    // Now you can use the blob for further processing or display
-                    // For example, you can set it as the source of an image element
-                    img.src = URL.createObjectURL(blob);
-                });
-
-                // Stop the camera stream
-                stream.getTracks().forEach(track => track.stop());
-
-                // Clean up the video element
-                document.body.removeChild(videoElement);
-            } catch (error) {
-                console.error('Error accessing the camera:', error);
-            }
-        }
-
-        // Add an event listener to the "Process" button to request camera access
-        document.querySelector('input[type="submit"]').addEventListener('click', (event) => {
-            event.preventDefault(); // Prevent the form submission
-            requestCameraAccess();
-        });
+            restartButton.onclick = function () {
+                resetTextOutput();
+                inputFile.value = "";
+                profilePic.src = "capture.jpg";
+            };
+        };
     </script>
 </body>
 </html>
