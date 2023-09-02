@@ -3,99 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Capture Image</title>
-    <link rel="stylesheet" href="main.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f2f2f2;
-        }
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
 
-        header {
-            text-align: center;
-            background-color:#7254fc;
-            color: #fff;
-            padding: 10px 0;
-        }
-
-        h1 {
-            margin: 0;
-            padding: 0;
-        }
-
-        main {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        form {
-            text-align: center;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        input[type="file"] {
-            display: none;
-        }
-
-        input[type="submit"] {
-            background-color: #7254fc;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #555;
-        }
-
-        p > img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 20px auto;
-        }
-
-        
-    </style>
+   <link rel="stylesheet" href="upload.css">
+    <title>Extract Text</title>
 </head>
 <body>
-    <header>
-        <h1>Capture Image</h1>
-    </header>
-    <main>
-        <form action="#" id="myform" enctype="multipart/form-data">
-            <label for="capture">Capture</label>
-            <input type="file" id="capture" accept="image/*" capture multiple />
-            <br />
-            <input type="submit" value="Process" />
-        </form>
-        <p><img src="capture.jpg" id="img" alt="from phone" /></p>
-    </main>
-    <script>
-        document.addEventListener('DOMContentLoaded', (ev) => {
-            let form = document.getElementById('myform');
-            let input = document.getElementById('capture');
+    <div class="container">
+        <div class="card">
+          <div class="flexColumn" >
+            <h1>Extract text</h1>
+            <p>You can extract complex text (like math,...)by capturing or uploading images</p>
+            <img src="capture.jpg"  id="profile-pic" height="200px" width="200px">
             
-            input.addEventListener('change', (ev) => {
-                console.dir(input.files[0]);
-                input.files[0].type.indexOf("image/");
-                let img = document.getElementById('img');
-                img.src = window.URL.createObjectURL(input.files[0]);
-            })
-        })
+        </div>
+         <div class="flexrow" >
+            <button id="extract-button">Extract Text</button>
+            <label for="input-file" id="uploadImg">Upload image</label>
+            <input type="file" accept="image/jpeg, image/png, image/jpg" id="input-file">
+        </div>
+        <div id="loading-indicator" style="display: none;">Extracting text...</div>
+            <textarea id="text-output" rows="10" cols="40" placeholder="extracted text here"></textarea>
+    </div>
+    </div>
+    <script src="https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js"></script>
+    <script>
+
+     window.onload = function () {
+  let profilePic = document.getElementById("profile-pic");
+  let inputFile = document.getElementById("input-file");
+  let extractButton = document.getElementById("extract-button");
+  let textOutput = document.getElementById("text-output");
+  let loadingIndicator = document.getElementById("loading-indicator"); // Add this line
+
+  inputFile.onchange = function () {
+    profilePic.src = URL.createObjectURL(inputFile.files[0]);
+  };
+
+  extractButton.onclick = function () {
+    loadingIndicator.style.display = "block"; // Show the loading indicator
+
+    Tesseract.recognize(
+      profilePic.src,
+      "eng",
+      {
+        logger: (m) => console.log(m),
+        lineSeparator: "\n",
+        preserve_interword_spaces: 1,
+      }
+    )
+      .then((result) => {
+        console.log(result.text);
+        textOutput.value = result.text;
+      })
+      .catch((error) => {
+        console.error("An error occurred during text extraction:", error);
+      })
+      .finally(() => {
+        loadingIndicator.style.display = "none"; // Hide the loading indicator when extraction is complete
+      });
+  };
+};
+
+
     </script>
 </body>
 </html>
-
