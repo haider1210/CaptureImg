@@ -14,12 +14,13 @@
             <div class="flexColumn">
                 <h1>Extract text</h1>
                 <p>You can extract complex text (such as mathematical equations, etc.) by uploading images, copy it, and input it into the main input field to get an instant solution.</p>
-                <img src="capture.jpg" id="profile-pic" height="200px" width="200px">
+                <img src="capture.jpg" id="profile-pic" height="200px" width="auto">
             </div>
             <div class="flexrow">
                 
+                <!-- Use the 'capture' attribute to request camera permission -->
                 <label for="input-file" id="uploadImg">Upload image</label>
-                <input type="file" accept="image/*" id="input-file">
+                <input type="file" accept="image/*" id="input-file" capture="camera">
                 <button id="extract-button">Extract Text</button>
                
             </div>
